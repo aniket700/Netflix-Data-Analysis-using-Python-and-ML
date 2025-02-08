@@ -1,0 +1,531 @@
+ import numpy as np
+ import pandas as pd
+ import matplotlib.pyplot as plt
+ import seaborn as sns
+
+Code cell <Cm-1scmZmEHw>
+# %% [code]
+df = pd.read_csv('mymoviedb.csv', lineterminator='\n')
+df.head()
+Execution output from Feb 8, 2025 9:07 PM
+16KB
+	text/plain
+		Release_Date                    Title  \
+		0   2021-12-15  Spider-Man: No Way Home   
+		1   2022-03-01               The Batman   
+		2   2022-02-25                  No Exit   
+		3   2021-11-24                  Encanto   
+		4   2021-12-22           The King's Man   
+		
+		                                            Overview  Popularity  Vote_Count  \
+		0  Peter Parker is unmasked and no longer able to...    5083.954        8940   
+		1  In his second year of fighting crime, Batman u...    3827.658        1151   
+		2  Stranded at a rest stop in the mountains durin...    2618.087         122   
+		3  The tale of an extraordinary family, the Madri...    2402.201        5076   
+		4  As a collection of history's worst tyrants and...    1895.511        1793   
+		
+		   Vote_Average Original_Language                               Genre  \
+		0           8.3                en  Action, Adventure, Science Fiction   
+		1           8.1                en            Crime, Mystery, Thriller   
+		2           6.3                en                            Thriller   
+		3           7.7                en  Animation, Comedy, Family, Fantasy   
+		4           7.0                en    Action, Adventure, Thriller, War   
+		
+		                                          Poster_Url  
+		0  https://image.tmdb.org/t/p/original/1g0dhYtq4i...  
+		1  https://image.tmdb.org/t/p/original/74xTEgt7R3...  
+		2  https://image.tmdb.org/t/p/original/vDHsLnOWKl...  
+		3  https://image.tmdb.org/t/p/original/4j0PNHkMr5...  
+		4  https://image.tmdb.org/t/p/original/aq4Pwv5Xeu...
+
+Code cell <hpMg7eGunAAz>
+# %% [code]
+df.info()
+Execution output from Feb 8, 2025 9:07 PM
+1KB
+	Stream
+		<class 'pandas.core.frame.DataFrame'>
+		RangeIndex: 9827 entries, 0 to 9826
+		Data columns (total 9 columns):
+		 #   Column             Non-Null Count  Dtype  
+		---  ------             --------------  -----  
+		 0   Release_Date       9827 non-null   object 
+		 1   Title              9827 non-null   object 
+		 2   Overview           9827 non-null   object 
+		 3   Popularity         9827 non-null   float64
+		 4   Vote_Count         9827 non-null   int64  
+		 5   Vote_Average       9827 non-null   float64
+		 6   Original_Language  9827 non-null   object 
+		 7   Genre              9827 non-null   object 
+		 8   Poster_Url         9827 non-null   object 
+		dtypes: float64(2), int64(1), object(6)
+		memory usage: 691.1+ KB
+
+Code cell <tMHCO2WiUEJ6>
+# %% [code]
+from google.colab import drive
+drive.mount('/content/drive')
+
+Code cell <-1obQ6_wnHT_>
+# %% [code]
+df['Genre'].head()
+Execution output from Feb 8, 2025 9:07 PM
+1KB
+	text/plain
+		0    Action, Adventure, Science Fiction
+		1              Crime, Mystery, Thriller
+		2                              Thriller
+		3    Animation, Comedy, Family, Fantasy
+		4      Action, Adventure, Thriller, War
+		Name: Genre, dtype: object
+
+Code cell <ntkZoH12qm-B>
+# %% [code]
+df.duplicated().sum()
+Execution output from Feb 8, 2025 9:07 PM
+0KB
+	text/plain
+		0
+
+Code cell <Hr7D4Yy_rIyW>
+# %% [code]
+df.describe()
+Execution output from Feb 8, 2025 9:07 PM
+11KB
+	text/plain
+		Popularity    Vote_Count  Vote_Average
+		count  9827.000000   9827.000000   9827.000000
+		mean     40.326088   1392.805536      6.439534
+		std     108.873998   2611.206907      1.129759
+		min      13.354000      0.000000      0.000000
+		25%      16.128500    146.000000      5.900000
+		50%      21.199000    444.000000      6.500000
+		75%      35.191500   1376.000000      7.100000
+		max    5083.954000  31077.000000     10.000000
+
+Code cell <z_udpU8cuAp7>
+# %% [code]
+
+
+ df.head()
+Execution output from Feb 8, 2025 9:07 PM
+16KB
+	text/plain
+		Release_Date                    Title  \
+		0   2021-12-15  Spider-Man: No Way Home   
+		1   2022-03-01               The Batman   
+		2   2022-02-25                  No Exit   
+		3   2021-11-24                  Encanto   
+		4   2021-12-22           The King's Man   
+		
+		                                            Overview  Popularity  Vote_Count  \
+		0  Peter Parker is unmasked and no longer able to...    5083.954        8940   
+		1  In his second year of fighting crime, Batman u...    3827.658        1151   
+		2  Stranded at a rest stop in the mountains durin...    2618.087         122   
+		3  The tale of an extraordinary family, the Madri...    2402.201        5076   
+		4  As a collection of history's worst tyrants and...    1895.511        1793   
+		
+		   Vote_Average Original_Language                               Genre  \
+		0           8.3                en  Action, Adventure, Science Fiction   
+		1           8.1                en            Crime, Mystery, Thriller   
+		2           6.3                en                            Thriller   
+		3           7.7                en  Animation, Comedy, Family, Fantasy   
+		4           7.0                en    Action, Adventure, Thriller, War   
+		
+		                                          Poster_Url  
+		0  https://image.tmdb.org/t/p/original/1g0dhYtq4i...  
+		1  https://image.tmdb.org/t/p/original/74xTEgt7R3...  
+		2  https://image.tmdb.org/t/p/original/vDHsLnOWKl...  
+		3  https://image.tmdb.org/t/p/original/4j0PNHkMr5...  
+		4  https://image.tmdb.org/t/p/original/aq4Pwv5Xeu...
+
+Code cell <rPbdvCNnuLAb>
+# %% [code]
+df['Release_Date'] = pd.to_datetime(df['Release_Date'])
+
+
+Code cell <bTOdCF_guvEP>
+# %% [code]
+
+ print(df['Release_Date'].dtypes)
+Execution output from Feb 8, 2025 9:07 PM
+0KB
+	Stream
+		datetime64[ns]
+
+Code cell <6qKHrH7guywk>
+# %% [code]
+df['Release_Date'] = df['Release_Date'].dt.year
+
+
+Code cell <ZscC2JxXu9AD>
+# %% [code]
+ df['Release_Date'].dtypes
+Execution output from Feb 8, 2025 9:08 PM
+0KB
+	text/plain
+		dtype('int32')
+
+Code cell <l2Tfoiu-u-7l>
+# %% [code]
+df.info()
+Execution output from Feb 8, 2025 9:08 PM
+1KB
+	Stream
+		<class 'pandas.core.frame.DataFrame'>
+		RangeIndex: 9827 entries, 0 to 9826
+		Data columns (total 9 columns):
+		 #   Column             Non-Null Count  Dtype  
+		---  ------             --------------  -----  
+		 0   Release_Date       9827 non-null   int32  
+		 1   Title              9827 non-null   object 
+		 2   Overview           9827 non-null   object 
+		 3   Popularity         9827 non-null   float64
+		 4   Vote_Count         9827 non-null   int64  
+		 5   Vote_Average       9827 non-null   float64
+		 6   Original_Language  9827 non-null   object 
+		 7   Genre              9827 non-null   object 
+		 8   Poster_Url         9827 non-null   object 
+		dtypes: float64(2), int32(1), int64(1), object(5)
+		memory usage: 652.7+ KB
+
+Code cell <lzdpJEmIvD9j>
+# %% [code]
+df.head()
+Execution output from Feb 8, 2025 9:08 PM
+16KB
+	text/plain
+		Release_Date                    Title  \
+		0          2021  Spider-Man: No Way Home   
+		1          2022               The Batman   
+		2          2022                  No Exit   
+		3          2021                  Encanto   
+		4          2021           The King's Man   
+		
+		                                            Overview  Popularity  Vote_Count  \
+		0  Peter Parker is unmasked and no longer able to...    5083.954        8940   
+		1  In his second year of fighting crime, Batman u...    3827.658        1151   
+		2  Stranded at a rest stop in the mountains durin...    2618.087         122   
+		3  The tale of an extraordinary family, the Madri...    2402.201        5076   
+		4  As a collection of history's worst tyrants and...    1895.511        1793   
+		
+		   Vote_Average Original_Language                               Genre  \
+		0           8.3                en  Action, Adventure, Science Fiction   
+		1           8.1                en            Crime, Mystery, Thriller   
+		2           6.3                en                            Thriller   
+		3           7.7                en  Animation, Comedy, Family, Fantasy   
+		4           7.0                en    Action, Adventure, Thriller, War   
+		
+		                                          Poster_Url  
+		0  https://image.tmdb.org/t/p/original/1g0dhYtq4i...  
+		1  https://image.tmdb.org/t/p/original/74xTEgt7R3...  
+		2  https://image.tmdb.org/t/p/original/vDHsLnOWKl...  
+		3  https://image.tmdb.org/t/p/original/4j0PNHkMr5...  
+		4  https://image.tmdb.org/t/p/original/aq4Pwv5Xeu...
+
+Code cell <Ko_iKGAvvKCs>
+# %% [code]
+cols = ['Overview', 'Original_Language', 'Poster_Url']
+
+Code cell <4jDx-fYkvPRz>
+# %% [code]
+df.drop(cols, axis = 1, inplace = True)
+
+
+Code cell <yFg5E6kAvZJp>
+# %% [code]
+df.columns
+Execution output from Feb 8, 2025 9:08 PM
+0KB
+	text/plain
+		Index(['Release_Date', 'Title', 'Popularity', 'Vote_Count', 'Vote_Average',
+		       'Genre'],
+		      dtype='object')
+
+Code cell <yAc-h9nOva93>
+# %% [code]
+df.head()
+Execution output from Feb 8, 2025 9:08 PM
+12KB
+	text/plain
+		Release_Date                    Title  Popularity  Vote_Count  \
+		0          2021  Spider-Man: No Way Home    5083.954        8940   
+		1          2022               The Batman    3827.658        1151   
+		2          2022                  No Exit    2618.087         122   
+		3          2021                  Encanto    2402.201        5076   
+		4          2021           The King's Man    1895.511        1793   
+		
+		   Vote_Average                               Genre  
+		0           8.3  Action, Adventure, Science Fiction  
+		1           8.1            Crime, Mystery, Thriller  
+		2           6.3                            Thriller  
+		3           7.7  Animation, Comedy, Family, Fantasy  
+		4           7.0    Action, Adventure, Thriller, War
+
+Code cell <l1mDL81TwDfb>
+# %% [code]
+def catigorize_col (df, col, labels):
+    """
+    catigorizes a certain column based on its quartiles
+
+    Args:
+        (df)     df   - dataframe we are proccesing
+        (col)    str  - to be catigorized column's name
+        (labels) list - list of labels from min to max
+
+    Returns:
+        (df)     df   - dataframe with the categorized col
+    """
+
+    edges = [df[col].describe()['min'],
+             df[col].describe()['25%'],
+             df[col].describe()['50%'],
+             df[col].describe()['75%'],
+             df[col].describe()['max']]
+
+    df[col] = pd.cut(df[col], edges, labels=labels, duplicates='drop')
+    return df
+
+Code cell <mjiZLjoj1yxJ>
+# %% [code]
+labels = ['not_popular', 'below_avg', 'average', 'popular']
+catigorize_col(df, 'Vote_Average', labels)
+df['Vote_Average'].unique()
+Execution output from Feb 8, 2025 9:08 PM
+0KB
+	text/plain
+		['popular', 'below_avg', 'average', 'not_popular', NaN]
+		Categories (4, object): ['not_popular' < 'below_avg' < 'average' < 'popular']
+
+Code cell <Bb8r6t532CNJ>
+# %% [code]
+df.head()
+Execution output from Feb 8, 2025 9:08 PM
+12KB
+	text/plain
+		Release_Date                    Title  Popularity  Vote_Count Vote_Average  \
+		0          2021  Spider-Man: No Way Home    5083.954        8940      popular   
+		1          2022               The Batman    3827.658        1151      popular   
+		2          2022                  No Exit    2618.087         122    below_avg   
+		3          2021                  Encanto    2402.201        5076      popular   
+		4          2021           The King's Man    1895.511        1793      average   
+		
+		                                Genre  
+		0  Action, Adventure, Science Fiction  
+		1            Crime, Mystery, Thriller  
+		2                            Thriller  
+		3  Animation, Comedy, Family, Fantasy  
+		4    Action, Adventure, Thriller, War
+
+Code cell <w7TV4jzQ2Leu>
+# %% [code]
+df['Vote_Average'].value_counts()
+Execution output from Feb 8, 2025 9:08 PM
+1KB
+	text/plain
+		Vote_Average
+		not_popular    2467
+		popular        2450
+		average        2412
+		below_avg      2398
+		Name: count, dtype: int64
+
+Code cell <tHzQam9A2zED>
+# %% [code]
+
+df.dropna(inplace = True)
+df.isna().sum()
+Execution output from Feb 8, 2025 9:08 PM
+1KB
+	text/plain
+		Release_Date    0
+		Title           0
+		Popularity      0
+		Vote_Count      0
+		Vote_Average    0
+		Genre           0
+		dtype: int64
+
+Code cell <UFDQgk8Q3ETt>
+# %% [code]
+df.head()
+Execution output from Feb 8, 2025 9:08 PM
+12KB
+	text/plain
+		Release_Date                    Title  Popularity  Vote_Count Vote_Average  \
+		0          2021  Spider-Man: No Way Home    5083.954        8940      popular   
+		1          2022               The Batman    3827.658        1151      popular   
+		2          2022                  No Exit    2618.087         122    below_avg   
+		3          2021                  Encanto    2402.201        5076      popular   
+		4          2021           The King's Man    1895.511        1793      average   
+		
+		                                Genre  
+		0  Action, Adventure, Science Fiction  
+		1            Crime, Mystery, Thriller  
+		2                            Thriller  
+		3  Animation, Comedy, Family, Fantasy  
+		4    Action, Adventure, Thriller, War
+
+Code cell <zbHHgUCt3L6N>
+# %% [code]
+
+ df['Genre'] = df['Genre'].str.split(', ')
+ df = df.explode('Genre').reset_index(drop=True)
+ df.head()
+Execution output from Feb 8, 2025 9:08 PM
+12KB
+	text/plain
+		Release_Date                    Title  Popularity  Vote_Count Vote_Average  \
+		0          2021  Spider-Man: No Way Home    5083.954        8940      popular   
+		1          2021  Spider-Man: No Way Home    5083.954        8940      popular   
+		2          2021  Spider-Man: No Way Home    5083.954        8940      popular   
+		3          2022               The Batman    3827.658        1151      popular   
+		4          2022               The Batman    3827.658        1151      popular   
+		
+		             Genre  
+		0           Action  
+		1        Adventure  
+		2  Science Fiction  
+		3            Crime  
+		4          Mystery
+
+Code cell <fot-BZT93X7w>
+# %% [code]
+
+df['Genre'] = df['Genre'].astype('category')
+df['Genre'].dtypes
+Execution output from Feb 8, 2025 9:08 PM
+0KB
+	text/plain
+		CategoricalDtype(categories=['Action', 'Adventure', 'Animation', 'Comedy', 'Crime',
+		                  'Documentary', 'Drama', 'Family', 'Fantasy', 'History',
+		                  'Horror', 'Music', 'Mystery', 'Romance', 'Science Fiction',
+		                  'TV Movie', 'Thriller', 'War', 'Western'],
+		, ordered=False, categories_dtype=object)
+
+Code cell <KZs2oXKKIEJG>
+# %% [code]
+
+df.info()
+Execution output from Feb 8, 2025 9:08 PM
+1KB
+	Stream
+		<class 'pandas.core.frame.DataFrame'>
+		RangeIndex: 25552 entries, 0 to 25551
+		Data columns (total 6 columns):
+		 #   Column        Non-Null Count  Dtype   
+		---  ------        --------------  -----   
+		 0   Release_Date  25552 non-null  int32   
+		 1   Title         25552 non-null  object  
+		 2   Popularity    25552 non-null  float64 
+		 3   Vote_Count    25552 non-null  int64   
+		 4   Vote_Average  25552 non-null  category
+		 5   Genre         25552 non-null  category
+		dtypes: category(2), float64(1), int32(1), int64(1), object(1)
+		memory usage: 749.6+ KB
+
+Code cell <vg552kBwNrNw>
+# %% [code]
+df.nunique()
+Execution output from Feb 8, 2025 9:09 PM
+1KB
+	text/plain
+		Release_Date     100
+		Title           9415
+		Popularity      8088
+		Vote_Count      3265
+		Vote_Average       4
+		Genre             19
+		dtype: int64
+
+Code cell <s6Va4NDwN0Oa>
+# %% [code]
+sns.set_style('whitegrid')
+
+Code cell <Gyi3UpDYN6Xn>
+# %% [code]
+df['Genre'].describe()
+Execution output from Feb 8, 2025 9:10 PM
+1KB
+	text/plain
+		count     25552
+		unique       19
+		top       Drama
+		freq       3715
+		Name: Genre, dtype: object
+
+Code cell <Ery49miFN-3X>
+# %% [code]
+ sns.catplot(y = 'Genre', data = df, kind = 'count',
+order = df['Genre'].value_counts().index,
+ color = '#4287f5')
+ plt.title('genre column distribution')
+ plt.show()
+Execution output from Feb 8, 2025 9:10 PM
+43KB
+	text/plain
+		<Figure size 511.111x500 with 1 Axes>
+
+Code cell <hhtuljS9OFop>
+# %% [code]
+ sns.catplot(y = 'Vote_Average', data = df, kind = 'count',
+order = df['Vote_Average'].value_counts().index,
+ color = '#4287f5')
+ plt.title('votes destribution')
+ plt.show()
+Execution output from Feb 8, 2025 9:11 PM
+23KB
+	text/plain
+		<Figure size 511.111x500 with 1 Axes>
+
+Code cell <pgUsR7p2ORab>
+# %% [code]
+df[df['Popularity'] == df['Popularity'].max()]
+Execution output from Feb 8, 2025 9:11 PM
+11KB
+	text/plain
+		Release_Date                    Title  Popularity  Vote_Count Vote_Average  \
+		0          2021  Spider-Man: No Way Home    5083.954        8940      popular   
+		1          2021  Spider-Man: No Way Home    5083.954        8940      popular   
+		2          2021  Spider-Man: No Way Home    5083.954        8940      popular   
+		
+		             Genre  
+		0           Action  
+		1        Adventure  
+		2  Science Fiction
+
+Code cell <wAOMxI1sOS-l>
+# %% [code]
+ df[df['Popularity'] == df['Popularity'].min()]
+Execution output from Feb 8, 2025 9:11 PM
+12KB
+	text/plain
+		Release_Date                                 Title  Popularity  \
+		25546          2021  The United States vs. Billie Holiday      13.354   
+		25547          2021  The United States vs. Billie Holiday      13.354   
+		25548          2021  The United States vs. Billie Holiday      13.354   
+		25549          1984                               Threads      13.354   
+		25550          1984                               Threads      13.354   
+		25551          1984                               Threads      13.354   
+		
+		       Vote_Count Vote_Average            Genre  
+		25546         152      average            Music  
+		25547         152      average            Drama  
+		25548         152      average          History  
+		25549         186      popular              War  
+		25550         186      popular            Drama  
+		25551         186      popular  Science Fiction
+
+Code cell <0-aRcsybOYHH>
+# %% [code]
+
+ df['Release_Date'].hist()
+ plt.title('Release_Date column distribution')
+ plt.show()
+Execution output from Feb 8, 2025 9:12 PM
+24KB
+	text/plain
+		<Figure size 640x480 with 1 Axes>
+
+Notebook attributes
+Show table of contents
